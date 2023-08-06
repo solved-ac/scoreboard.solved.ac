@@ -14,7 +14,7 @@ jobs:
       - name: Write environment variables
         run: |
           touch .env.local
-          echo "VITE_API_ENDPOINT=\"${{ vars.VITE_API_ENDPOINT }}\"" >> .env.local
+          echo "REACT_APP_API_ENDPOINT=\"${{ vars.VITE_API_ENDPOINT }}\"" >> .env.local
       - name: Build
         run: yarn build
   build-stable:
@@ -26,7 +26,7 @@ jobs:
       - name: Write environment variables
         run: |
           touch .env.local
-          echo "VITE_API_ENDPOINT=\"${{ vars.VITE_API_ENDPOINT }}\"" >> .env.local
+          echo "REACT_APP_API_ENDPOINT=\"${{ vars.VITE_API_ENDPOINT }}\"" >> .env.local
       - name: Install dependencies
         run: yarn
       - name: Build
@@ -35,6 +35,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./build
 permissions:
   contents: write
