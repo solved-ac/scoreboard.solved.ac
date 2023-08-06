@@ -34,7 +34,11 @@ const Scoreboard = () => {
     acAxios
       .get<ScoreboardResponse>("/contest/scoreboard", {
         signal: controller.signal,
-        params: options,
+        params: {
+          contestId: options.contestId,
+          page: options.page,
+          rated: options.excludeNoRated,
+        },
       })
       .then((res) => {
         setScoreboard(res.data);
@@ -56,7 +60,7 @@ const Scoreboard = () => {
     () => {
       controller.abort();
     };
-  }, [options, setOption]);
+  }, [options.contestId, options.excludeNoRated, options.page, setOption]);
 
   const handlePageChange = (page: number) => {
     if (options.page === page) {
