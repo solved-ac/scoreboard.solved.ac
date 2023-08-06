@@ -63,6 +63,12 @@ const Scoreboard = () => {
               myRowNumber: null,
             });
           }
+        })
+        .catch((e) => {
+          if (e.name === "AbortError") {
+            return;
+          }
+          console.error(e);
         });
     };
 
