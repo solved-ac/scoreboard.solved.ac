@@ -57,7 +57,7 @@ const Scoreboard = () => {
         }
       });
 
-    () => {
+    return () => {
       controller.abort();
     };
   }, [options.contestId, options.excludeNoRated, options.page, setOption]);
