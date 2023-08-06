@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
-import { Space } from "@solved-ac/ui-react";
-import { useEffect, useState } from "react";
+import { EmptyStatePlaceholder, Space } from "@solved-ac/ui-react";
+import { IconLoader } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
 import { useOptions } from "../hooks/useOptions";
 import {
   ContestResponse,
@@ -28,37 +29,52 @@ const Scoreboard = () => {
   const [my, setMy] = useState<TeamResponseItem | null>(null);
   const [contest, setContest] = useState<ContestResponse | null>(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
+  const controllerRef = useRef<AbortController | null>(null);
 
-    acAxios
-      .get<ScoreboardResponse>("/contest/scoreboard", {
-        signal: controller.signal,
-        params: {
-          contestId: options.contestId,
-          page: options.page,
-          rated: options.excludeNoRated,
-        },
-      })
-      .then((res) => {
-        setScoreboard(res.data);
-        setStats(res.data.stats);
-        setTeamsCount(res.data.teams.count);
-        setContest(res.data.contest);
-        if (res.data.my) {
-          setMy(res.data.my.result);
-          setOption({
-            myRowNumber: res.data.my.rowNumber,
-          });
-        } else {
-          setOption({
-            myRowNumber: null,
-          });
-        }
-      });
+  useEffect(() => {
+    const recur = () => {
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
+
+      controllerRef.current = new AbortController();
+
+      acAxios
+        .get<ScoreboardResponse>("/contest/scoreboard", {
+          signal: controllerRef.current.signal,
+          params: {
+            contestId: options.contestId,
+            page: options.page,
+            rated: options.excludeNoRated,
+          },
+        })
+        .then((res) => {
+          setScoreboard(res.data);
+          setStats(res.data.stats);
+          setTeamsCount(res.data.teams.count);
+          setContest(res.data.contest);
+          if (res.data.my) {
+            setMy(res.data.my.result);
+            setOption({
+              myRowNumber: res.data.my.rowNumber,
+            });
+          } else {
+            setOption({
+              myRowNumber: null,
+            });
+          }
+        });
+    };
+
+    recur();
+
+    const interval = setInterval(recur, 10000);
 
     return () => {
-      controller.abort();
+      clearInterval(interval);
+      if (controllerRef.current) {
+        controllerRef.current.abort();
+      }
     };
   }, [options.contestId, options.excludeNoRated, options.page, setOption]);
 
@@ -89,16 +105,20 @@ const Scoreboard = () => {
           <Space h={24} />
         </>
       )}
-      {scoreboard
-        ? scoreboard.teams.items.map((x, i) => (
-            <ScoreboardRow
-              key={i}
-              team={x}
-              contest={contest}
-              myHandle={myHandle}
-            />
-          ))
-        : null}
+      {scoreboard ? (
+        scoreboard.teams.items.map((x, i) => (
+          <ScoreboardRow
+            key={i}
+            team={x}
+            contest={contest}
+            myHandle={myHandle}
+          />
+        ))
+      ) : (
+        <EmptyStatePlaceholder>
+          <IconLoader />
+        </EmptyStatePlaceholder>
+      )}
       <Space h={96} />
       <Pagination
         totalContestants={teamsCount}
