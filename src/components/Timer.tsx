@@ -40,17 +40,6 @@ const Timer = (props: Props) => {
       </>
     );
   }
-  if (timeUntilStart > 1 * DAYS) {
-    const hours = Math.floor(timeUntilStart / HOURS);
-    const minutes = Math.floor((timeUntilStart % HOURS) / MINUTES);
-    const seconds = Math.floor((timeUntilStart % MINUTES) / SECONDS);
-
-    return (
-      <>
-        starts in {hours}:{twoDigits(minutes)}:{twoDigits(seconds)}
-      </>
-    );
-  }
   if (timeUntilStart > 0) {
     const hours = Math.floor(timeUntilStart / HOURS);
     const minutes = Math.floor((timeUntilStart % HOURS) / MINUTES);
