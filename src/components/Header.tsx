@@ -105,6 +105,26 @@ const ProblemsContainer = styled.div`
   }
 `;
 
+const ContestLinkContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+`;
+
+const ContestIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  min-width: 0;
+`;
+
+const ContestTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+`;
+
 interface Props {
   contest: ContestResponse;
   stats: ProblemStatsResponse[] | null;
@@ -120,13 +140,25 @@ const Header = ({ contest, stats }: Props) => {
         <TopBar>
           <TopBarContents>
             <ContestTitle>
-              <Typo ellipsis>
-                <HoverLink
-                  href={`https://www.acmicpc.net/contest/view/${contestId}`}
-                >
-                  <IconTrophy /> {title}
-                </HoverLink>
-              </Typo>
+              <HoverLink
+                href={`https://www.acmicpc.net/contest/view/${contestId}`}
+              >
+                <ContestLinkContainer>
+                  <ContestIconContainer>
+                    <IconTrophy />
+                  </ContestIconContainer>
+                  <ContestTitleContainer>
+                    <Typo ellipsis>{title}</Typo>
+                    <Typo description small>
+                      <b>{options.excludeNoRated ? "rated" : "all"}</b>
+                      <HideOnMobile style={{ display: "inline" }}>
+                        {" "}
+                        contestants
+                      </HideOnMobile>
+                    </Typo>
+                  </ContestTitleContainer>
+                </ContestLinkContainer>
+              </HoverLink>
             </ContestTitle>
             <NoShrink>
               <Typo tabular>
@@ -175,12 +207,14 @@ const Header = ({ contest, stats }: Props) => {
         <StatsRow>
           <StatsLeftContainer>
             <StatsContainer>
-              <ShowOnMobile>try</ShowOnMobile>
-              <HideOnMobile>tried</HideOnMobile>
-            </StatsContainer>
-            <StatsContainer>
               <ShowOnMobile>ac</ShowOnMobile>
               <HideOnMobile>accepted</HideOnMobile>
+            </StatsContainer>
+            <StatsContainer>
+              <Typo description>
+                <ShowOnMobile>try</ShowOnMobile>
+                <HideOnMobile>tried</HideOnMobile>
+              </Typo>
             </StatsContainer>
             {hasScores && (
               <StatsContainer>
@@ -190,8 +224,8 @@ const Header = ({ contest, stats }: Props) => {
             )}
             <StatsContainer>
               <Typo description>
-                <ShowOnMobile>frz</ShowOnMobile>
-                <HideOnMobile>frozen</HideOnMobile>
+                <ShowOnMobile>pen</ShowOnMobile>
+                <HideOnMobile>pending</HideOnMobile>
               </Typo>
             </StatsContainer>
           </StatsLeftContainer>
@@ -207,10 +241,12 @@ const Header = ({ contest, stats }: Props) => {
 
               return (
                 <div key={i} style={{ flex: "1 0 0", minWidth: 0 }}>
-                  <StatsContainer>{triedTeams}</StatsContainer>
                   <StatsContainer>
                     {acceptedTeams}
                     {frozenTeams > 0 && <Typo description>+</Typo>}
+                  </StatsContainer>
+                  <StatsContainer>
+                    <Typo description>{triedTeams}</Typo>
                   </StatsContainer>
                   {hasScores && (
                     <StatsContainer>

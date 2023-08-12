@@ -4,6 +4,8 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
+  IconFlag,
+  IconFlagOff,
   IconUserUp,
 } from "@tabler/icons-react";
 import { transparentize } from "polished";
@@ -45,11 +47,12 @@ const PageDisplay = styled.span<{ maxWidthContent?: string }>`
 interface Props {
   totalContestants: number;
   handlePageChange: (page: number) => void;
+  handleReset: () => void;
 }
 
 const Pagination = (props: Props) => {
-  const { options } = useOptions();
-  const { totalContestants, handlePageChange } = props;
+  const { options, setOption } = useOptions();
+  const { totalContestants, handlePageChange, handleReset } = props;
 
   const totalPage = Math.ceil(totalContestants / 50);
   const rankRangeStart = Math.min(
@@ -63,6 +66,19 @@ const Pagination = (props: Props) => {
   return (
     <PaginationFix>
       <PaginationRow>
+        <Button
+          transparent
+          circle
+          onClick={() => {
+            handleReset();
+            setOption({
+              excludeNoRated: !options.excludeNoRated,
+              page: 1,
+            });
+          }}
+        >
+          {options.excludeNoRated ? <IconFlag /> : <IconFlagOff />}
+        </Button>
         <div style={{ flex: 1 }} />
         {myPage !== null && (
           <Button transparent circle onClick={() => handlePageChange(myPage)}>

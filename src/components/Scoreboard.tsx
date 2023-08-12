@@ -28,6 +28,7 @@ const Scoreboard = () => {
   const [teamsCount, setTeamsCount] = useState<number>(0);
   const [my, setMy] = useState<TeamResponseItem | null>(null);
   const [contest, setContest] = useState<ContestResponse | null>(null);
+  const [contestFinished, setContestFinished] = useState<boolean>(false);
 
   const controllerRef = useRef<AbortController | null>(null);
 
@@ -53,6 +54,11 @@ const Scoreboard = () => {
           setStats(res.data.stats);
           setTeamsCount(res.data.teams.count);
           setContest(res.data.contest);
+
+          if (new Date(res.data.contest.end).getTime() < Date.now()) {
+            setContestFinished(true);
+          }
+
           if (res.data.my) {
             setMy(res.data.my.result);
             setOption({
@@ -74,6 +80,10 @@ const Scoreboard = () => {
 
     recur();
 
+    if (contestFinished) {
+      return undefined;
+    }
+
     const interval = setInterval(recur, 10000);
 
     return () => {
@@ -82,7 +92,13 @@ const Scoreboard = () => {
         controllerRef.current.abort();
       }
     };
-  }, [options.contestId, options.excludeNoRated, options.page, setOption]);
+  }, [
+    contestFinished,
+    options.contestId,
+    options.excludeNoRated,
+    options.page,
+    setOption,
+  ]);
 
   const handlePageChange = (page: number) => {
     if (options.page === page) {
@@ -92,6 +108,10 @@ const Scoreboard = () => {
     setOption({
       page,
     });
+  };
+
+  const handleReset = () => {
+    setScoreboard(null);
   };
 
   if (!contest) {
@@ -129,6 +149,7 @@ const Scoreboard = () => {
       <Pagination
         totalContestants={teamsCount}
         handlePageChange={handlePageChange}
+        handleReset={handleReset}
       />
     </>
   );
