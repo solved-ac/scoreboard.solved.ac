@@ -35,6 +35,11 @@ export interface TeamResponseItem {
    */
   handle: string;
   /**
+   * Arena tier of the team.
+   * Integer min 0, max 14
+   */
+  tier: number;
+  /**
    * Score of the user.
    *
    * 0. accepted problems, ot total score of the team.

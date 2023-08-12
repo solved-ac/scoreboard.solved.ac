@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { mix, transparentize } from "polished";
 import { ContestResponse, TeamResponseItem } from "../types/Scoreboard";
+import ArenaTierBadge from "./ArenaTierBadge";
 import Rank from "./Rank";
 import Score from "./Score";
 import ScoreboardCell from "./ScoreboardCell";
@@ -42,10 +43,17 @@ const ScoreboardRowContainer = styled.div`
 const HandleContainer = styled.div`
   display: flex;
   flex: 0 0 160px;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0px;
   @media (max-width: 768px) {
-    display: block;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
     flex: unset;
+    padding: 4px 0;
   }
 `;
 
@@ -83,14 +91,17 @@ interface Props {
 }
 
 const ScoreboardRow = ({ team, contest, myHandle }: Props) => {
-  const { rank, handle, score, problems: teamProblems } = team;
+  const { rank, tier, handle, score, problems: teamProblems } = team;
   const { problems: contestProblems } = contest;
   return (
     <ScoreboardRowWrapper highlight={myHandle === handle}>
       <ScoreboardRowContainer>
         <Rank rank={rank} />
         <ProblemResultRow>
-          <HandleContainer>{handle}</HandleContainer>
+          <HandleContainer>
+            <ArenaTierBadge value={tier} />
+            {handle}
+          </HandleContainer>
           <ProblemResultRowContainer
             style={{ maxWidth: contestProblems.length * 120 }}
           >
