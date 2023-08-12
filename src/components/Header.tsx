@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button, NavBar, Space, Typo } from "@solved-ac/ui-react";
+import { Button, NavBar, Space, Tooltip, Typo } from "@solved-ac/ui-react";
 import { IconClock, IconMoon, IconSun, IconTrophy } from "@tabler/icons-react";
 import { transparentize } from "polished";
 import { useOptions } from "../hooks/useOptions";
@@ -151,10 +151,14 @@ const Header = ({ contest, stats }: Props) => {
                     <Typo ellipsis>{title}</Typo>
                     <Typo description small>
                       <b>{options.excludeNoRated ? "rated" : "all"}</b>
-                      <HideOnMobile style={{ display: "inline" }}>
-                        {" "}
-                        contestants
-                      </HideOnMobile>
+                      {options.rivals ? (
+                        " rivals"
+                      ) : (
+                        <HideOnMobile style={{ display: "inline" }}>
+                          {" "}
+                          contestants
+                        </HideOnMobile>
+                      )}
                     </Typo>
                   </ContestTitleContainer>
                 </ContestLinkContainer>
@@ -166,17 +170,19 @@ const Header = ({ contest, stats }: Props) => {
               </Typo>
             </NoShrink>
             <NoShrink>
-              <Button
-                transparent
-                circle
-                onClick={() =>
-                  setOption({
-                    theme: options.theme === "light" ? "dark" : "light",
-                  })
-                }
-              >
-                {options.theme === "light" ? <IconMoon /> : <IconSun />}
-              </Button>
+              <Tooltip title="Change theme">
+                <Button
+                  transparent
+                  circle
+                  onClick={() =>
+                    setOption({
+                      theme: options.theme === "light" ? "dark" : "light",
+                    })
+                  }
+                >
+                  {options.theme === "light" ? <IconMoon /> : <IconSun />}
+                </Button>
+              </Tooltip>
             </NoShrink>
           </TopBarContents>
         </TopBar>

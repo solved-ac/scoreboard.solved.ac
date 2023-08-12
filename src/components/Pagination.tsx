@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
-import { Button, Typo } from "@solved-ac/ui-react";
+import { Button, Tooltip, Typo } from "@solved-ac/ui-react";
 import {
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconFlag,
   IconFlagOff,
+  IconUserHeart,
+  IconUserOff,
   IconUserUp,
 } from "@tabler/icons-react";
 import { transparentize } from "polished";
@@ -36,6 +38,8 @@ const PageDisplay = styled.span<{ maxWidthContent?: string }>`
   font-feature-settings: "tnum";
   position: relative;
   text-align: right;
+  display: flex;
+  flex-direction: column;
   &:before {
     content: "${({ maxWidthContent: placeholder }) => placeholder ?? ""}";
     display: block;
@@ -59,64 +63,86 @@ const Pagination = (props: Props) => {
     totalContestants,
     (options.page - 1) * 50 + 1
   );
-  const rankRangeEnd = Math.min(totalContestants, options.page * 50);
   const myPage =
     options.myRowNumber !== null ? Math.ceil(options.myRowNumber / 50) : null;
 
   return (
     <PaginationFix>
       <PaginationRow>
-        <Button
-          transparent
-          circle
-          onClick={() => {
-            handleReset();
-            setOption({
-              excludeNoRated: !options.excludeNoRated,
-              page: 1,
-            });
-          }}
-        >
-          {options.excludeNoRated ? <IconFlag /> : <IconFlagOff />}
-        </Button>
+        <Tooltip title="Rated">
+          <Button
+            transparent
+            circle
+            onClick={() => {
+              handleReset();
+              setOption({
+                excludeNoRated: !options.excludeNoRated,
+                page: 1,
+              });
+            }}
+          >
+            {options.excludeNoRated ? <IconFlag /> : <IconFlagOff />}
+          </Button>
+        </Tooltip>
+        <Tooltip title="Rivals">
+          <Button
+            transparent
+            circle
+            onClick={() => {
+              handleReset();
+              setOption({
+                rivals: !options.rivals,
+                page: 1,
+              });
+            }}
+          >
+            {options.rivals ? <IconUserHeart /> : <IconUserOff />}
+          </Button>
+        </Tooltip>
         <div style={{ flex: 1 }} />
         {myPage !== null && (
-          <Button transparent circle onClick={() => handlePageChange(myPage)}>
-            <IconUserUp />
-          </Button>
+          <Tooltip title="My rank">
+            <Button transparent circle onClick={() => handlePageChange(myPage)}>
+              <IconUserUp />
+            </Button>
+          </Tooltip>
         )}
-        <Button
-          transparent
-          circle
-          onClick={() => handlePageChange(1)}
-          disabled={options.page <= 1}
-        >
-          <IconChevronsLeft />
-        </Button>
-        <Button
-          transparent
-          circle
-          onClick={() => handlePageChange(options.page - 1)}
-          disabled={options.page <= 1}
-        >
-          <IconChevronLeft />
-        </Button>
-        <PageDisplay
-          maxWidthContent={`${formatNumber(totalContestants)} – ${formatNumber(
-            totalContestants
-          )} / ${formatNumber(totalContestants)}`}
-        >
-          {formatNumber(rankRangeStart)} &ndash; {formatNumber(rankRangeEnd)}
-          <Typo description> / {formatNumber(totalContestants)}</Typo>
+        <Tooltip title="First page">
+          <Button
+            transparent
+            circle
+            onClick={() => handlePageChange(1)}
+            disabled={options.page <= 1}
+          >
+            <IconChevronsLeft />
+          </Button>
+        </Tooltip>
+        <Tooltip title="Previous page">
+          <Button
+            transparent
+            circle
+            onClick={() => handlePageChange(options.page - 1)}
+            disabled={options.page <= 1}
+          >
+            <IconChevronLeft />
+          </Button>
+        </Tooltip>
+        <PageDisplay maxWidthContent={`#${formatNumber(totalContestants)}`}>
+          #{formatNumber(rankRangeStart)}
+          <Typo description small>
+            / {formatNumber(totalContestants)}
+          </Typo>
         </PageDisplay>
-        <Button
-          transparent
-          circle
-          onClick={() => handlePageChange(options.page + 1)}
-          disabled={options.page >= totalPage}
-        >
-          <IconChevronRight />
-        </Button>
+        <Tooltip title="Next page">
+          <Button
+            transparent
+            circle
+            onClick={() => handlePageChange(options.page + 1)}
+            disabled={options.page >= totalPage}
+          >
+            <IconChevronRight />
+          </Button>
+        </Tooltip>
       </PaginationRow>
     </PaginationFix>
   );

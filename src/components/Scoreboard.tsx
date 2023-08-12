@@ -47,6 +47,7 @@ const Scoreboard = () => {
             contestId: options.contestId,
             page: options.page,
             rated: options.excludeNoRated,
+            rivals: options.rivals,
           },
         })
         .then((res) => {
@@ -96,6 +97,7 @@ const Scoreboard = () => {
     contestFinished,
     options.contestId,
     options.excludeNoRated,
+    options.rivals,
     options.page,
     setOption,
   ]);

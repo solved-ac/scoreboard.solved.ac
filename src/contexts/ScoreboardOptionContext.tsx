@@ -5,6 +5,7 @@ export interface ScoreboardOptionsCache {
   theme: "light" | "dark" | "black";
   page: number;
   excludeNoRated: boolean;
+  rivals: boolean;
 }
 
 export interface ScoreboardOptions {
@@ -13,6 +14,7 @@ export interface ScoreboardOptions {
   page: number;
   myRowNumber: number | null;
   excludeNoRated: boolean;
+  rivals: boolean;
 }
 
 export interface ScoreboardOptionContextType {
@@ -25,6 +27,7 @@ const OPTIONS_CACHE_KEY = "ac-scoreboard-options";
 const OPTIONS_DEFAULT: ScoreboardOptions = {
   theme: "light" as const,
   excludeNoRated: true,
+  rivals: false,
   page: 1,
   myRowNumber: null,
   contestId: 0,
