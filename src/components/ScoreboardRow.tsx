@@ -40,13 +40,17 @@ const ScoreboardRowContainer = styled.div`
   }
 `;
 
-const HandleContainer = styled.div`
+const HandleContainer = styled.a`
   display: flex;
   flex: 0 0 160px;
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
   gap: 0px;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
   @media (max-width: 768px) {
     flex-direction: row;
     gap: 8px;
@@ -98,7 +102,7 @@ const ScoreboardRow = ({ team, contest, myHandle }: Props) => {
       <ScoreboardRowContainer>
         <Rank rank={rank} />
         <ProblemResultRow>
-          <HandleContainer>
+          <HandleContainer href={`https://solved.ac/profile/${handle}/arena`}>
             <ArenaTierBadge value={tier} />
             {handle}
           </HandleContainer>
