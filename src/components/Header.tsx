@@ -216,18 +216,18 @@ const Header = ({ contest, stats }: Props) => {
               <ShowOnMobile>ac</ShowOnMobile>
               <HideOnMobile>accepted</HideOnMobile>
             </StatsContainer>
-            <StatsContainer>
-              <Typo description>
-                <ShowOnMobile>try</ShowOnMobile>
-                <HideOnMobile>tried</HideOnMobile>
-              </Typo>
-            </StatsContainer>
             {hasScores && (
               <StatsContainer>
                 <ShowOnMobile>pac</ShowOnMobile>
                 <HideOnMobile>partial</HideOnMobile>
               </StatsContainer>
             )}
+            <StatsContainer>
+              <Typo description>
+                <ShowOnMobile>try</ShowOnMobile>
+                <HideOnMobile>tried</HideOnMobile>
+              </Typo>
+            </StatsContainer>
             <StatsContainer>
               <Typo description>
                 <ShowOnMobile>pen</ShowOnMobile>
@@ -251,15 +251,15 @@ const Header = ({ contest, stats }: Props) => {
                     {acceptedTeams}
                     {frozenTeams > 0 && <Typo description>+</Typo>}
                   </StatsContainer>
-                  <StatsContainer>
-                    <Typo description>{triedTeams}</Typo>
-                  </StatsContainer>
                   {hasScores && (
                     <StatsContainer>
                       {partialTeams}
                       {frozenTeams > 0 && <Typo description>+</Typo>}
                     </StatsContainer>
                   )}
+                  <StatsContainer>
+                    <Typo description>{triedTeams}</Typo>
+                  </StatsContainer>
                   <StatsContainer>
                     {frozenTeams > 0 && <Typo description>{frozenTeams}</Typo>}
                   </StatsContainer>
