@@ -9,10 +9,14 @@ import { HoverLink } from "./HoverLink";
 import { HideOnMobile, ShowOnMobile } from "./Mobile";
 import Timer from "./Timer";
 
-const TopFix = styled.div`
+interface FixProps {
+  contestCount: number;
+}
+
+const TopFix = styled.div<FixProps>`
   position: fixed;
   top: 0;
-  width: 100%;
+  width: ${({ contestCount }) => 100 / contestCount}%;
   z-index: 1;
 `;
 
@@ -136,7 +140,7 @@ const Header = ({ contest, stats }: Props) => {
 
   return (
     <>
-      <TopFix>
+      <TopFix contestCount={options.contestIds.length}>
         <TopBar>
           <TopBarContents>
             <ContestTitle>

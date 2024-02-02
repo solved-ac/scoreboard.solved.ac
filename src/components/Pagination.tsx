@@ -15,11 +15,14 @@ import { useOptions } from "../hooks/useOptions";
 import { formatNumber } from "../utils/format";
 import { Container } from "./Container";
 
-const PaginationFix = styled.footer`
+interface FixProps {
+  contestCount: number;
+}
+
+const PaginationFix = styled.footer<FixProps>`
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  width: ${({ contestCount }) => 100 / contestCount}%;
   height: 70px;
   background-color: ${({ theme }) =>
     transparentize(0.1, theme.color.background.page)};
@@ -67,7 +70,7 @@ const Pagination = (props: Props) => {
     options.myRowNumber !== null ? Math.ceil(options.myRowNumber / 50) : null;
 
   return (
-    <PaginationFix>
+    <PaginationFix contestCount={options.contestIds.length}>
       <PaginationRow>
         <Tooltip title="Rated">
           <Button

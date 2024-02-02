@@ -5,7 +5,7 @@ import { useOptions } from "./hooks/useOptions";
 
 function App() {
   const { options } = useOptions();
-  
+
   return (
     <>
       <ThemeProvider theme={solvedThemes[options.theme]}>
@@ -22,7 +22,17 @@ function App() {
             }
           `}
         />
-        <Scoreboard />
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
+          {options.contestIds.map((_, index) => (
+            <div key={index} style={{ flex: 1, minWidth: 0 }}>
+              <Scoreboard index={index} />
+            </div>
+          ))}
+        </div>
       </ThemeProvider>
     </>
   );

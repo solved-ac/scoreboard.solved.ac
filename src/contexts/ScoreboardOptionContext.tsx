@@ -10,7 +10,7 @@ export interface ScoreboardOptionsCache {
 
 export interface ScoreboardOptions {
   theme: "light" | "dark" | "black";
-  contestId: number;
+  contestIds: number[];
   page: number;
   myRowNumber: number | null;
   excludeNoRated: boolean;
@@ -30,7 +30,7 @@ const OPTIONS_DEFAULT: ScoreboardOptions = {
   rivals: false,
   page: 1,
   myRowNumber: null,
-  contestId: 0,
+  contestIds: [],
 };
 
 export const ScoreboardOptionContext =
@@ -56,9 +56,22 @@ const getCachedOptions = (): ScoreboardOptionsCache => {
 export const ScoreboardOptionProvider = (props: PropsWithChildren) => {
   const { searchParams } = new URL(window.location.href);
 
+  const contestIds = (() => {
+    const contestIdString = searchParams.get("contestId");
+    const contestIdArray = searchParams.get("contestIds");
+
+    if (typeof contestIdString === "string") {
+      return [Number(contestIdString)];
+    }
+    if (typeof contestIdArray === "string") {
+      return contestIdArray.split(",").map(Number);
+    }
+    return [];
+  })()
+
   const [options, setOptions] = useState<ScoreboardOptions>({
     ...getCachedOptions(),
-    contestId: Number(searchParams.get("contestId")) || 0,
+    contestIds,
     myRowNumber: null,
   });
 

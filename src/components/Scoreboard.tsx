@@ -14,14 +14,20 @@ import Header from "./Header";
 import Pagination from "./Pagination";
 import ScoreboardRow from "./ScoreboardRow";
 
+interface Props {
+  index: number;
+}
+
 const MyRowContainer = styled.div`
   position: sticky;
   top: 108px;
   z-index: 2;
 `;
 
-const Scoreboard = () => {
+const Scoreboard = ({ index }: Props) => {
   const { options, setOption } = useOptions();
+
+  const multipleContests = options.contestIds.length > 1;
 
   const [scoreboard, setScoreboard] = useState<ScoreboardResponse | null>(null);
   const [stats, setStats] = useState<ProblemStatsResponse[] | null>(null);
@@ -44,7 +50,7 @@ const Scoreboard = () => {
         .get<ScoreboardResponse>("/contest/scoreboard", {
           signal: controllerRef.current.signal,
           params: {
-            contestId: options.contestId,
+            contestId: options.contestIds[index],
             page: options.page,
             rated: options.excludeNoRated,
             rivals: options.rivals,
@@ -95,11 +101,12 @@ const Scoreboard = () => {
     };
   }, [
     contestFinished,
-    options.contestId,
     options.excludeNoRated,
     options.rivals,
     options.page,
     setOption,
+    options.contestIds,
+    index,
   ]);
 
   const handlePageChange = (page: number) => {
@@ -125,7 +132,7 @@ const Scoreboard = () => {
   return (
     <>
       <Header contest={contest} stats={stats} />
-      {my && (
+      {!multipleContests && my && (
         <>
           <MyRowContainer>
             <ScoreboardRow team={my} contest={contest} myHandle={myHandle} />
