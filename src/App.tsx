@@ -1,5 +1,6 @@
 import { Global, ThemeProvider, css } from "@emotion/react";
 import { SolvedGlobalStyles, solvedThemes } from "@solved-ac/ui-react";
+import React from "react";
 import Scoreboard from "./components/Scoreboard";
 import { useOptions } from "./hooks/useOptions";
 
@@ -28,9 +29,19 @@ function App() {
           }}
         >
           {options.contestIds.map((_, index) => (
-            <div key={index} style={{ flex: 1, minWidth: 0 }}>
-              <Scoreboard index={index} />
-            </div>
+            <React.Fragment key={index}>
+              {index ? (
+                <div
+                  style={{
+                    flex: "0 0 1px",
+                    backgroundColor: "#dddfe0",
+                  }}
+                />
+              ) : null}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <Scoreboard index={index} />
+              </div>
+            </React.Fragment>
           ))}
         </div>
       </ThemeProvider>
